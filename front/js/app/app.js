@@ -1,17 +1,5 @@
-var componenteA = Vue.component('button-counter', {
-    data: function () {
-        return {
-        count: 0
-        }
-    },
-    template: '<button v-on:click="count++">Me ha pulsado {{ count }} veces.</button>'
-})
-
 new Vue({
     el: '#app',
-    components: {
-        'button-counter': componenteA
-    },
     data () {
       return {
         items: [],
@@ -24,11 +12,11 @@ new Vue({
             codigo : null,
             precio : null,
             fecha_vencimiento : null,
+            cantidad : null
         },
       }
     },
     async created () {
-        console.log(moment().format('DD/MM/YYYY'));
         await this.getAll();
     },
     methods: {
@@ -54,6 +42,7 @@ new Vue({
                 codigo : null,
                 precio : null,
                 fecha_vencimiento : null,
+                cantidad : null
             };
             if(accion == 'I'){
                 this.accion = 'I';
@@ -68,8 +57,8 @@ new Vue({
                 this.formData.codigo = item.Codigo;
                 this.formData.precio = item.precio;
                 this.formData.fecha_vencimiento = moment(item.fecha_vencimiento).format('DD/MM/YYYY');
-                console.log(this.formData.fecha_vencimiento);
                 this.formData.estado = item.Estado;
+                this.formData.cantidad = item.cantidad;
             }
         },
         async deleteElement(item){
@@ -82,14 +71,37 @@ new Vue({
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Continuar',
                 cancelButtonText: 'Cancelar'
-            }).then((result) => {
+            }).then(async (result) => {
                 if (result.value) {
-                    this.getAll();
-                    Swal.fire(
-                        'Correcto!',
-                        'Producto eliminardo correctamente.',
-                        'success'
-                    );
+                    try {
+                        let response = await axios({
+                            url: `../products`,
+                            method: "DELETE",
+                            data : {
+                                "id" : item.ProductoId
+                            }
+                        });
+                        if(parseInt(response.status) == 200){
+                            this.getAll();
+                            Swal.fire(
+                                'Correcto!',
+                                `Producto eliminado con exito`,
+                                'success'
+                            );              
+                        }else{
+                            Swal.fire(
+                                'Error!',
+                                `error eliminando el producto`,
+                                'error'
+                            );   
+                        }
+                    } catch (error) {
+                        Swal.fire(
+                            'Error!',
+                            'Ocurrio un error inesperado.',
+                            'error'
+                        );
+                    }
                 }
             })
         },
@@ -100,6 +112,7 @@ new Vue({
             formdata.append("precio", this.formData.precio);
             formdata.append("fecha_vencimiento", this.formData.fecha_vencimiento);
             formdata.append("estado", this.formData.estado);
+            formdata.append("cantidad", this.formData.cantidad);
 
             let accion = this.accion;
 
@@ -131,7 +144,7 @@ new Vue({
             } catch (error) {
                 Swal.fire(
                     'Error!',
-                    'Ocurrio un error al agregar el producto.',
+                    'Ocurrio un error inesperado.',
                     'error'
                 );
             }

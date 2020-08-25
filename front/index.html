@@ -38,6 +38,7 @@
                             <th>Nombre</th>
                             <th>Código</th>
                             <th>Precio</th>
+                            <th>Cantidad</th>
                             <th>Fecha de vencimiento</th>
                             <th>Estado</th>
                             <th>Acciones</th>
@@ -49,6 +50,7 @@
                             <th>{{item.Nombre}}</th>
                             <td>{{item.Codigo}}</td>
                             <td>{{item.precio}}</td>
+                            <td>{{item.cantidad}}</td>
                             <td>{{item.fecha_vencimiento}}</td>
                             <td>{{item.Estado == 0 ? 'Activo' : 'Inactivo'}}</td>
                             <td>
@@ -120,6 +122,14 @@
                     </div>
                   </div>
                   <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="control-label mb-10">Cantidad*</label>
+                        <input type="number" id="cantidad" name="cantidad"
+                            v-model="formData.cantidad"
+                            class="form-control" placeholder="Cantidad" required>
+                      </div>
+                    </div>
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="estado">Estado*</label>

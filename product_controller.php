@@ -39,6 +39,22 @@ class ProductController {
         }
     }
 
+    public function deleteActions(String $path, $product){
+        switch ($path) {
+            case 'products':
+                $response = $this->apiProduct->deleteProduct($product);
+                if($response){
+                    http_response_code(200);
+                }else{
+                    http_response_code(400);
+                }
+                break;
+            default:
+                http_response_code(400);
+                break;
+        }     
+    }
+
 }
 
 ?>

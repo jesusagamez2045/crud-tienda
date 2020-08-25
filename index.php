@@ -34,6 +34,20 @@ switch ($server_method) {
                 break;
         }
         break;
+    case 'DELETE' :
+        include_once 'product_controller.php';
+        $controller = new ProductController();
+        $path = (isset($_REQUEST['url'])) ? $_REQUEST['url'] : '';
+        $product = json_decode(file_get_contents('php://input'), true);
+        switch ($path) {
+            case 'products':
+                $controller->deleteActions($path, $product);
+                break;
+            default:
+                http_response_code(404);
+                break;
+        }
+        break;
     default:
         http_response_code(404);
         break;

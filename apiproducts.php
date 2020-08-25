@@ -24,6 +24,13 @@ class ApiProduct{
         return $result;
     }
 
+    function deleteProduct($products){
+        $model = new Product();
+        $result = $model->deleteProduct($products);
+
+        return $result;     
+    }
+
 }
 
 
