@@ -5,7 +5,17 @@ include_once 'db.php';
 class Product extends DB{
 
     function getProducts(){
-        $query = $this->connect()->query('SELECT * FROM productos');
+        $sql = "";
+        if(isset($_GET['filtro']) && isset($_GET['valor'])){
+            $signo = isset($_GET['signo']) ? $_GET['signo'] : '=';
+            $campo = $_GET['filtro'];
+            $valor = $_GET['valor'];
+            $sql = "WHERE $campo $signo $valor";
+        }
+        if(isset($_GET['sql'])){
+            $sql = $_GET['sql'];
+        }
+        $query = $this->connect()->query("SELECT * FROM productos $sql ORDER BY Nombre");
         return $query;
     }
 
@@ -15,7 +25,7 @@ class Product extends DB{
                 $sentencia = $this->connect()->prepare("UPDATE productos SET Nombre = :nombre, Codigo = :codigo, precio = :precio, fecha_vencimiento = :fecha_vencimiento, Estado = :estado, cantidad = :cantidad WHERE ProductoId = :id");
                 $sentencia->bindParam(':id', $product['id']);
             }else{
-                $sentencia = $this->connect()->prepare("INSERT INTO productos (Nombre, Codigo, precio, fecha_vencimiento, Estado, cantidad) VALUES (:nombre, :codigo, :precio, :fecha_vencimiento, :estado. :cantidad)");
+                $sentencia = $this->connect()->prepare("INSERT INTO productos (Nombre, Codigo, precio, fecha_vencimiento, Estado, cantidad) VALUES (:nombre, :codigo, :precio, :fecha_vencimiento, :estado, :cantidad)");
             }
             $sentencia->bindParam(':nombre', $product['nombre']);
             $sentencia->bindParam(':codigo', $product['codigo']);
@@ -25,10 +35,10 @@ class Product extends DB{
             $sentencia->bindParam(':cantidad', $product['cantidad']);
     
             $sentencia->execute();
-            // $sentencia->debugDumpParams();
+            $sentencia->debugDumpParams();
             return true;
         } catch (\Throwable $th) {
-            // var_dump($th);
+            var_dump($th);
             return false;
         }
     }

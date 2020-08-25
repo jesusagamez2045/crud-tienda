@@ -46,17 +46,17 @@ new Vue({
             };
             if(accion == 'I'){
                 this.accion = 'I';
-                this.modalTitle = 'Ingresar item';
+                this.modalTitle = 'Ingresar Producto';
                 this.buttonText = 'Ingresar';
             }else{
                 this.accion = 'A';
-                this.modalTitle = 'Actualizar item';
+                this.modalTitle = 'Actualizar Producto';
                 this.buttonText = 'Actualizar';
                 this.formData.nombre = item.Nombre;
                 this.formData.id = item.ProductoId;
                 this.formData.codigo = item.Codigo;
                 this.formData.precio = item.precio;
-                this.formData.fecha_vencimiento = moment(item.fecha_vencimiento).format('DD/MM/YYYY');
+                this.formData.fecha_vencimiento = item.fecha_vencimiento;
                 this.formData.estado = item.Estado;
                 this.formData.cantidad = item.cantidad;
             }
@@ -149,5 +149,24 @@ new Vue({
                 );
             }
         },
+        async filterProducts(flitro, valor){
+            try {
+                let parametros = "";
+                if(flitro === 'fecha_vencimiento'){
+                    parametros = `?sql=WHERE fecha_vencimiento BETWEEN '${moment().format('YYYY-MM-DD')}' AND '${moment(new Date()).add(5, 'days').format('YYYY-MM-DD')}'`;
+                }else{
+                    parametros = `?filtro=${flitro}&valor=${valor}`;
+                }
+                let response = await axios.get(`../products${parametros}`);
+                console.log("la respuesta filtrada", response.data.data);
+                this.items = response.data.data;
+            } catch (error) {
+                Swal.fire(
+                    'Error!',
+                    'Ocurrio un error inesperado.',
+                    'error'
+                );               
+            }
+        }
     }
 })
