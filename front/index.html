@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crud</title>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="plugins/sweet_alert/sweetalert2.min.css">
+    <script src="https://kit.fontawesome.com/8eb5726193.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="app">
+        <nav class="navbar navbar-light bg-light">
+          <a class="navbar-brand" href="#">Productos</a>
+        </nav>
+        <div class="container">
+            <div class="row py-3">
+              <div class="col-12">
+                <button
+                  class="btn btn-success btn-icon-split"
+                  data-toggle="modal"
+                  data-target="#modalProducto"
+                  @click="showModal('I')"
+                >
+                  <span class="icon text-white-50">
+                    <i class="fas fa-plus"></i>
+                  </span>
+                  <span class="text">Agregar productos</span>
+                </button>
+              </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <th>#</th>
+                            <th>Nombre</th>
+                            <th>Código</th>
+                            <th>Precio</th>
+                            <th>Fecha de vencimiento</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr v-for="item in items">
+                            <td>{{item.ProductoId}}</td>
+                            <th>{{item.Nombre}}</th>
+                            <td>{{item.Codigo}}</td>
+                            <td>{{item.precio}}</td>
+                            <td>{{item.fecha_vencimiento}}</td>
+                            <td>{{item.Estado == 0 ? 'Activo' : 'Inactivo'}}</td>
+                            <td>
+                              <button 
+                                class="btn btn-primary"
+                                data-toggle="modal"
+                                data-target="#modalProducto"
+                                @click="showModal('A', item)"
+                                title="Editar">
+                                  <i class="fas fa-pen"></i>
+                              </button>
+                              <button class="btn btn-danger" @click="deleteElement(item)" title="Eliminar"><i class="fas fa-trash"></i></button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- modal ingresar/actualizar -->
+
+        <div class="modal fade" id="modalProducto" role="dialog" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <h3 class="txt-dark capitalize-font">
+                  {{modalTitle}}
+                </h3>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div>
+              <div class="modal-body">
+                <form @submit.prevent="insertUpdate()" id="formProducto">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="control-label mb-10">Nombre*</label>
+                        <input type="text" id="nombre" name="nombre"
+                            v-model="formData.nombre"
+                            class="form-control" placeholder="Nombre" required>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="control-label mb-10">Código*</label>
+                        <input type="text" id="codigo" name="codigo"
+                            v-model="formData.codigo"
+                            class="form-control" placeholder="Código" required>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="control-label mb-10">Precio*</label>
+                        <input type="number" id="precio" name="precio"
+                            v-model="formData.precio"
+                            class="form-control" placeholder="Precio" required>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="control-label mb-10">Fecha de vencimiento*</label>
+                        <input type="date" id="fecha_vencimiento" name="fecha_vencimiento"
+                            v-model="formData.fecha_vencimiento"
+                            class="form-control" placeholder="Fecha de vencimiento" required>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="estado">Estado*</label>
+                        <select class="form-control" id="estado" v-model="formData.estado" required>
+                          <option value="" selected>Seleccione estado</option>
+                          <option value="0">Activo</option>
+                          <option value="1">Inactivo</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-success" form="formProducto">{{buttonText}}</button>
+              </div>
+            </div>
+          </div>
+      </div>
+
+      <!-- fin del modal -->
+
+
+
+
+    </div>
+    <script src="bootstrap/jquery-3.5.1.min.js"></script>
+    <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="js/moment.js"></script>
+    <script src="js/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="plugins/sweet_alert/sweetalert2.all.min.js"></script>
+    <script src="js/app/app.js"></script>
+</body>
+</html>
